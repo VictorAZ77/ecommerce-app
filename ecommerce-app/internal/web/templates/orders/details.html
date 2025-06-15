@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <style>
+        .order-info, .order-items { margin-bottom: 20px; border: 1px solid #eee; padding: 15px; border-radius: 8px; }
+        .order-info p strong { display: inline-block; width: 120px; }
+        .order-items table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .order-items th, .order-items td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .order-items th { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>{{.Title}}</h1>
+
+    <div class="order-info">
+        <h2>Información del Pedido</h2>
+        <p><strong>ID:</strong> {{.Order.ID}}</p>
+        <p><strong>Cliente ID:</strong> {{.Order.ClientID}}</p>
+        <p><strong>Fecha:</strong> {{.Order.OrderDate.Format "2006-01-02 15:04"}}</p>
+        <p><strong>Total:</strong> ${{printf "%.2f" .Order.TotalAmount}}</p>
+        <p><strong>Estado:</strong> {{.Order.Status}}</p>
+        <p><strong>Creado:</strong> {{.Order.CreatedAt.Format "2006-01-02 15:04"}}</p>
+        <p><strong>Actualizado:</strong> {{.Order.UpdatedAt.Format "2006-01-02 15:04"}}</p>
+    </div>
+
+    <div class="order-items">
+        <h2>Productos del Pedido</h2>
+        {{if .Items}}
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto ID</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Items}}
+                <tr>
+                    <td>{{.ProductID}}</td>
+                    <td>{{.Quantity}}</td>
+                    <td>${{printf "%.2f" .Price}}</td>
+                    <td>{{printf "%.2f" (mul (toFloat64 .Quantity) .Price)}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        {{else}}
+        <p>No hay productos en este pedido.</p>
+        {{end}}
+    </div>
+    <form action="/orders/{{.Order.ID}}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas cancelar este pedido? Esta acción no se puede deshacer y revertirá el stock de los productos.');" style="margin-top: 20px;">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" style="background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Cancelar Pedido</button>
+    </form>
+    <p><a href="/orders">Volver al listado de pedidos</a></p>
+</body>
+</html>
+
+<style>
+    
+    .btn-cancel-order {
+        background-color: #dc3545; 
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px; 
+    }
+    .btn-cancel-order:hover {
+        background-color: #c82333; 
+    }
+</style>
