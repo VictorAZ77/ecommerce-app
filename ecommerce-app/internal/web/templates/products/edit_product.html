@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - Editar Producto</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #d4af37;
+            --dark-brown: #8b4513;
+            --cream: #f5f5dc;
+            --forest-green: #2d5016;
+            --charcoal: #2c3e50;
+            --leather-brown: #8b4513;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden; 
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            border: 2px solid var(--primary-gold);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--charcoal);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--dark-brown));
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--charcoal);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-brown) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        button[type="submit"]:hover::before {
+            left: 100%;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .hidden-error {
+            display: none;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--charcoal);
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15), 0 0 0 1px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            z-index: 10;
+            margin-top: 20px;
+            border: 2px solid var(--primary-gold);
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            min-width: 180px;
+        }
+
+        .back-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2), 0 0 0 1px rgba(212, 175, 55, 0.5);
+            background: var(--primary-gold);
+            color: white;
+        }
+
+        .back-link:active {
+            transform: translateY(0);
+        }
+
+        .back-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            button[type="submit"], .back-link {
+                font-size: 0.95rem;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>{{.Title}}</h2>
+        
+        
+        <div id="errorMessage" class="error-message {{if not .ErrorMessage}}hidden-error{{end}}">
+            {{.ErrorMessage}}
+        </div>
+
+        <form action="/products/update/{{.Product.ID}}" method="POST">
+            
+            <input type="hidden" name="_method" value="PUT"> 
+            
+            <div class="form-group">
+                <label for="name">Nombre del Producto:</label>
+                <input type="text" id="name" name="name" value="{{.Product.Name}}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Descripción:</label>
+                <textarea id="description" name="description" required>{{.Product.Description}}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Precio (USD):</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" value="{{.Product.Price}}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="stock">Stock Disponible:</label>
+                <input type="number" id="stock" name="stock" min="0" value="{{.Product.Stock}}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="imageURL">URL de la Imagen:</label>
+                <input type="text" id="imageURL" name="imageURL" value="{{.Product.ImageURL}}">
+            </div>
+            
+            <button type="submit">
+                <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+        </form>
+    </div>
+
+    <a href="/products" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Volver a Productos
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorMessageDiv = document.getElementById('errorMessage');
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorMessageFromURL = urlParams.get('error');
+
+            if (errorMessageFromURL && errorMessageDiv.textContent.trim() === '') {
+                errorMessageDiv.textContent = decodeURIComponent(errorMessageFromURL);
+                errorMessageDiv.classList.remove('hidden-error');
+            }
+        });
+    </script>
+</body>
+</html>

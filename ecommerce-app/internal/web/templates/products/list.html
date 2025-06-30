@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - Tienda Hípica</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+       
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #d4af37;
+            --dark-brown: #8b4513;
+            --cream: #f5f5dc;
+            --forest-green: #2d5016; 
+            --charcoal: #2c3e50;
+            --light-grey-bg: #f8f9fa; 
+            --lighter-grey-bg: #e9ecef; 
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, var(--light-grey-bg) 0%, var(--lighter-grey-bg) 100%);
+            min-height: 100vh;
+            color: var(--charcoal);
+            position: relative;
+            overflow-x: hidden;
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+        }
+
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%), /* primary-gold */
+                radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.05) 0%, transparent 50%); /* dark-brown */
+            background-size: 200px 200px;
+            animation: float 25s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--primary-gold);
+            width: calc(100% - 40px); 
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--primary-gold); 
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-gold), var(--dark-brown));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(212, 175, 55, 0.3); 
+        }
+
+        .logo-icon::before {
+            content: '🐎';
+            font-size: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        h1 {
+            color: var(--charcoal); 
+            font-size: 32px;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: var(--dark-brown); 
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-brown) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3); 
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4); 
+        }
+
+        .button.secondary {
+            background: linear-gradient(135deg, var(--dark-brown) 0%, #654321 100%); 
+            box-shadow: 0 6px 12px rgba(139, 69, 19, 0.3); /
+        }
+
+        .button.secondary:hover {
+            box-shadow: 0 10px 20px rgba(139, 69, 19, 0.4); 
+        }
+
+        
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+            margin-right: 5px; 
+            margin-bottom: 5px; 
+        }
+
+        .action-link.edit {
+            background-color: #007bff; 
+            color: white;
+        }
+        .action-link.edit:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .action-link.delete {
+            background-color: #dc3545; /* Rojo para eliminar */
+            color: white;
+        }
+        .action-link.delete:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
+        
+        .action-link i {
+            margin-right: 5px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            
+            background: linear-gradient(135deg, var(--charcoal) 0%, #3e5a70 100%); 
+            color: white;
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th:first-child {
+            border-top-left-radius: 15px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 15px;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s ease;
+        }
+
+        tr:hover td {
+            background-color: rgba(212, 175, 55, 0.05);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .price {
+            font-weight: bold;
+            color: var(--charcoal); 
+            font-size: 16px;
+        }
+
+        .stock {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .stock.high {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .stock.medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .stock.low {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .date {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state .icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--charcoal); 
+        }
+
+        .decorative-horses {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .horse-icon {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(212, 175, 55, 0.1); 
+            animation: gallop 15s linear infinite;
+        }
+
+        .horse-icon:nth-child(1) {
+            top: 15%;
+            left: -50px;
+            animation-delay: 0s;
+        }
+
+        .horse-icon:nth-child(2) {
+            top: 35%;
+            left: -50px;
+            animation-delay: -5s;
+        }
+
+        .horse-icon:nth-child(3) {
+            top: 55%;
+            left: -50px;
+            animation-delay: -10s;
+        }
+
+        @keyframes gallop {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(calc(100vw + 50px)); }
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(139, 69, 19, 0.1); 
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--charcoal); 
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+    
+        .search-section {
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: rgba(139, 69, 19, 0.1); 
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 40px; 
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--charcoal);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .button {
+                justify-content: center;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px 6px;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stat-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+            }
+            thead tr { 
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #e0e0e0;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+            td { 
+                border: none;
+                border-bottom: 1px solid #eee; 
+                position: relative;
+                padding-left: 50%; 
+                text-align: right;
+            }
+            td:before { 
+                content: attr(data-label);
+                position: absolute;
+                left: 6px;
+                width: 45%; 
+                padding-right: 10px; 
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                color: var(--dark-brown); 
+            }
+            
+            td:nth-of-type(1):before { content: "ID:"; }
+            td:nth-of-type(2):before { content: "Nombre:"; }
+            td:nth-of-type(3):before { content: "Descripción:"; }
+            td:nth-of-type(4):before { content: "Precio:"; }
+            td:nth-of-type(5):before { content: "Stock:"; }
+            td:nth-of-type(6):before { content: "Creado:"; }
+            td:nth-of-type(7):before { content: "Actualizado:"; }
+            td:nth-of-type(8):before { content: "Acciones:"; }
+
+            td.actions-column {
+                flex-direction: column;
+                align-items: flex-end; 
+                gap: 5px;
+                padding-left: 6px; 
+            }
+
+           
+            .search-section {
+                padding: 10px 15px;
+            }
+            .search-input {
+                padding: 10px 15px 10px 35px; 
+                font-size: 0.9rem;
+            }
+            .search-icon {
+                left: 10px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decorative-horses">
+        <div class="horse-icon">🐎</div>
+        <div class="horse-icon">🏇</div>
+        <div class="horse-icon">🐴</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo-icon"></div>
+                <div>
+                    <h1>{{.Title}}</h1>
+                    <p class="subtitle">Gestión de Inventario Hípico</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value">{{len .Products}}</div>
+                <div class="stat-label">Productos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">🐎</div>
+                <div class="stat-label">Categorías</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">🏆</div>
+                <div class="stat-label">Premium</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="/products/new" class="button">
+                <i class="fas fa-plus-circle"></i> Crear Nuevo Producto
+            </a>
+            <a href="/home" class="button secondary">
+                <i class="fas fa-home"></i> Volver al Inicio
+            </a>
+        </div>
+
+        
+        <div class="search-section">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="productSearch" placeholder="Buscar productos por nombre o descripción..." class="search-input">
+            </div>
+        </div>
+
+        <div class="table-container">
+            {{if .Products}}
+            <table id="productsTable"> 
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> ID</th>
+                        <th><i class="fas fa-box-open"></i> Nombre</th>
+                        <th><i class="fas fa-align-left"></i> Descripción</th>
+                        <th><i class="fas fa-dollar-sign"></i> Precio</th>
+                        <th><i class="fas fa-warehouse"></i> Stock</th>
+                        <th><i class="fas fa-calendar-alt"></i> Creado</th>
+                        <th><i class="fas fa-calendar-check"></i> Actualizado</th>
+                        <th><i class="fas fa-cogs"></i> Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Products}}
+                    <tr>
+                        <td data-label="ID"><strong>#{{.ID}}</strong></td>
+                        <td data-label="Nombre" class="product-name"><strong>{{.Name}}</strong></td> <!-- Added class -->
+                        <td data-label="Descripción" class="product-description">{{.Description}}</td> <!-- Added class -->
+                        <td data-label="Precio" class="price">${{printf "%.2f" .Price}}</td>
+                        <td data-label="Stock">
+                            <span class="stock {{if gt .Stock 20}}high{{else if gt .Stock 5}}medium{{else}}low{{end}}">
+                                {{.Stock}} unid.
+                            </span>
+                        </td>
+                        <td data-label="Creado" class="date">{{.CreatedAt.Format "02/01/2006 15:04"}}</td>
+                        <td data-label="Actualizado" class="date">{{.UpdatedAt.Format "02/01/2006 15:04"}}</td>
+                        <td data-label="Acciones" class="actions-column">
+                            <a href="/products/edit/{{.ID}}" class="action-link edit">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <form action="/products/delete/{{.ID}}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.');" style="display: inline-block;">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="action-link delete">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{else}}
+            <div class="empty-state">
+                <div class="icon">🐎</div>
+                <h3>No hay productos registrados</h3>
+                <p>Comienza agregando tu primer producto hípico</p>
+                <br>
+                <a href="/products/new" class="button">
+                    <i class="fas fa-plus-circle"></i> Crear Primer Producto
+                </a>
+            </div>
+            {{end}}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('productSearch');
+            const productsTable = document.getElementById('productsTable');
+            
+            if (productsTable) {
+                const tableRows = productsTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+                searchInput.addEventListener('keyup', function() {
+                    const searchTerm = searchInput.value.toLowerCase();
+
+                    for (let i = 0; i < tableRows.length; i++) {
+                        const row = tableRows[i];
+                        const productName = row.querySelector('.product-name').textContent.toLowerCase();
+                        const productDescription = row.querySelector('.product-description').textContent.toLowerCase();
+
+                        if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
+                            row.style.display = ''; 
+                        } else {
+                            row.style.display = 'none'; 
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

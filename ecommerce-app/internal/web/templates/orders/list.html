@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - Listado de Pedidos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #d4af37;
+            --dark-brown: #8b4513;
+            --cream: #f5f5dc;
+            --forest-green: #2d5016;
+            --charcoal: #2c3e50;
+            --light-grey: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: var(--charcoal);
+            background: linear-gradient(135deg, var(--light-grey) 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 1000px; 
+            text-align: center;
+            border: 2px solid var(--primary-gold);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--charcoal);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--dark-brown));
+            border-radius: 2px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-start; 
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-brown) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .button i {
+            margin-right: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate; 
+            border-spacing: 0;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 0.95rem;
+            color: var(--charcoal);
+        }
+
+        th {
+            background-color: var(--cream);
+            color: var(--dark-brown);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Redondear las esquinas de los th de la cabecera */
+        th:first-child { border-top-left-radius: 12px; }
+        th:last-child { border-top-right-radius: 12px; }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .details-link {
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .details-link:hover {
+            color: var(--dark-brown);
+            text-decoration: underline;
+        }
+
+        /* Estilo para el mensaje de no hay pedidos */
+        .no-orders-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--charcoal);
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15), 0 0 0 1px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            z-index: 10;
+            margin-top: 20px;
+            border: 2px solid var(--primary-gold);
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            min-width: 180px;
+        }
+
+        .back-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2), 0 0 0 1px rgba(212, 175, 55, 0.5);
+            background: var(--primary-gold);
+            color: white;
+        }
+
+        .back-link:active {
+            transform: translateY(0);
+        }
+
+        .back-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+            .button {
+                width: 100%;
+                justify-content: center;
+                padding: 10px 15px;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #e0e0e0;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                color: var(--dark-brown);
+            }
+            
+            td:nth-of-type(1):before { content: "ID Pedido:"; }
+            td:nth-of-type(2):before { content: "Cliente:"; }
+            td:nth-of-type(3):before { content: "Fecha:"; }
+            td:nth-of-type(4):before { content: "Total:"; }
+            td:nth-of-type(5):before { content: "Estado:"; }
+            td:nth-of-type(6):before { content: "Acciones:"; }
+
+            td:last-child {
+                border-bottom: none;
+            }
+            .no-orders-message td {
+                text-align: center;
+                padding-left: 0;
+            }
+            .no-orders-message td:before {
+                content: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{.Title}}</h1>
+
+        <div class="action-buttons">
+            <a href="/orders/new" class="button">
+                <i class="fas fa-plus-circle"></i>
+                Crear Nuevo Pedido
+            </a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>Cliente ID</th> 
+                    <th>Fecha Pedido</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Orders}}
+                <tr>
+                    <td data-label="ID Pedido">{{.ID}}</td>
+                    <td data-label="Cliente">{{.ClientID}}</td>
+                    <td data-label="Fecha Pedido">{{.OrderDate.Format "02/01/2006"}}</td>
+                    <td data-label="Total">${{printf "%.2f" .TotalAmount}}</td>
+                    <td data-label="Estado">{{.Status}}</td>
+                    <td data-label="Acciones">
+                        <a href="/orders/{{.ID}}" class="details-link">Ver Detalles</a>
+                    </td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="6" class="no-orders-message">No hay pedidos registrados.</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    
+    <a href="/" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Volver al inicio
+    </a>
+</body>
+</html>

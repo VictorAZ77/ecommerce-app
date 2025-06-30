@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - Equestrian Elite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #d4af37;
+            --dark-brown: #8b4513;
+            --cream: #f5f5dc;
+            --forest-green: #2d5016;
+            --charcoal: #2c3e50;
+            --leather-brown: #8b4513;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: var(--charcoal);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+     
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><pattern id="horseshoe" patternUnits="userSpaceOnUse" width="40" height="40"><path d="M20 5 C30 5 35 15 35 20 C35 30 30 35 20 35 C10 35 5 30 5 20 C5 15 10 5 20 5 Z M15 20 L25 20" fill="none" stroke="currentColor" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23horseshoe)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-brown) 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            text-align: left;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 0.5rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(212,175,55,0.3); }
+            to { text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 30px rgba(212,175,55,0.6); }
+        }
+
+        .logo i {
+            margin-right: 1rem;
+            font-size: 3rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--cream);
+            font-style: italic;
+            margin-bottom: 0;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+       
+        .auth-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+     
+        .auth-nav .auth-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .auth-nav .auth-btn {
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .auth-nav .auth-btn.login {
+            background: linear-gradient(135deg, transparent, transparent);
+            border: 2px solid var(--primary-gold);
+            color: var(--primary-gold);
+        }
+
+        .auth-nav .auth-btn.register {
+            background: linear-gradient(135deg, var(--primary-gold), #b8941f);
+            border: 2px solid var(--primary-gold);
+            color: white;
+        }
+
+        .auth-nav .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .auth-nav .auth-btn:hover::before {
+            left: 100%;
+        }
+
+        .auth-nav .auth-btn.login:hover {
+            background: linear-gradient(135deg, var(--primary-gold), #b8941f);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(212,175,55,0.4);
+        }
+
+        .auth-nav .auth-btn.register:hover {
+            background: linear-gradient(135deg, #b8941f, var(--primary-gold));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(212,175,55,0.5);
+        }
+
+        
+        .auth-nav .user-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .auth-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.1);
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(212,175,55,0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .auth-nav .user-info:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: var(--primary-gold);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+
+        .auth-nav .user-info .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-gold), #b8941f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .auth-nav .user-info .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .auth-nav .user-info .user-name {
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .auth-nav .user-info .user-role {
+            color: var(--primary-gold);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-nav .logout-btn {
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: rgba(220,53,69,0.8);
+            border: 2px solid rgba(220,53,69,0.6);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(220,53,69,0.2);
+        }
+
+        .auth-nav .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .auth-nav .logout-btn:hover::before {
+            left: 100%;
+        }
+
+        .auth-nav .logout-btn:hover {
+            background: rgba(220,53,69,1);
+            border-color: rgba(220,53,69,1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(220,53,69,0.4);
+        }
+
+        .auth-nav .logout-btn i {
+            margin-right: 8px;
+        }
+        
+        .welcome-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .welcome-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--dark-brown));
+            border-radius: 2px;
+        }
+
+        .welcome-text {
+            font-size: 1.1rem;
+            color: var(--charcoal);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+       
+        .nav-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--dark-brown));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border-color: var(--primary-gold);
+        }
+
+        .nav-card i {
+            font-size: 3rem;
+            color: var(--primary-gold);
+            margin-bottom: 1.5rem;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .nav-card:hover i {
+            transform: scale(1.1);
+            color: var(--dark-brown);
+        }
+
+        .nav-card h3 {
+            font-size: 1.5rem;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .nav-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .nav-card a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--primary-gold), var(--dark-brown));
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-card a:hover::before {
+            left: 100%;
+        }
+
+        .nav-card a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.4);
+        }
+
+       
+        .features-section {
+            background: linear-gradient(135deg, var(--cream) 0%, white 100%);
+            padding: 4rem 0;
+            margin-top: 4rem;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .features-title {
+            font-size: 2.5rem;
+            color: var(--charcoal);
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-item i {
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h4 {
+            font-size: 1.2rem;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        
+        .footer {
+            background: var(--charcoal);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: var(--primary-gold);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: white;
+            transform: scale(1.2);
+        }
+
+      
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .header-left {
+                text-align: center;
+            }
+
+            .auth-nav {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+            }
+
+            .auth-nav .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .auth-nav .auth-btn {
+                width: 100%;
+                max-width: 200px;
+                text-align: center;
+            }
+
+            .auth-nav .user-container {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+                align-items: center;
+            }
+
+            .auth-nav .user-info {
+                justify-content: center;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .auth-nav .logout-btn {
+                width: 100%;
+                max-width: 200px;
+                text-align: center;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-card {
+                padding: 2rem;
+            }
+        }
+
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--charcoal);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(212,175,55,0.3);
+            border-top: 3px solid var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="logo">
+                    <i class="fas fa-horse"></i>
+                    {{.Title}}
+                </h1>
+            </div>
+            
+            <nav>
+            </nav>
+
+            <div class="auth-nav">
+                {{if .IsAuthenticated}}
+                    <div class="user-container">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">{{.Username}}</div>
+                                <div class="user-role">{{.UserRole}}</div>
+                            </div>
+                        </div>
+                        <a href="/logout" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </a>
+                    </div>
+                {{else}}
+                    <div class="auth-buttons">
+                        <a href="/login" class="auth-btn login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Iniciar Sesión
+                        </a>
+                        <a href="/register" class="auth-btn register">
+                            <i class="fas fa-user-plus"></i>
+                            Registrarse
+                        </a>
+                    </div>
+                {{end}}
+            </div>
+        </div>
+    </header>
+
+    <section class="welcome-section">
+        <h2 class="welcome-title">¡Bienvenido al Sistema de Gestión!</h2>
+        <p class="welcome-text">
+            Descubre nuestra plataforma integral para la gestión de tu negocio ecuestre. 
+            Administra clientes, productos y pedidos con la elegancia y precisión que merece 
+            el mundo hípico.
+        </p>
+    </section>
+
+    <section class="nav-section">
+        <div class="nav-grid">
+            <div class="nav-card">
+                <i class="fas fa-users"></i>
+                <h3>Gestión de Clientes</h3>
+                <p>Administra tu cartera de clientes ecuestres, desde jinetes profesionales hasta aficionados apasionados.</p>
+                <a href="/clients">Acceder a Clientes</a>
+            </div>
+
+            <div class="nav-card">
+                <i class="fas fa-box"></i>
+                <h3>Catálogo de Productos</h3>
+                <p>Explora y gestiona tu inventario de equipamiento hípico, desde monturas artesanales hasta accesorios premium.</p>
+                <a href="/products">Ver Productos</a>
+            </div>
+
+            <div class="nav-card">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Control de Pedidos</h3>
+                <p>Supervisa todas las órdenes de compra, desde la solicitud hasta la entrega de equipamiento ecuestre.</p>
+                <a href="/orders">Gestionar Pedidos</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="features-container">
+            <h2 class="features-title">Características Principales</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Seguridad Premium</h4>
+                    <p>Protección avanzada de datos con cifrado de nivel bancario</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h4>Diseño Responsivo</h4>
+                    <p>Acceso completo desde cualquier dispositivo</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>Análisis Detallado</h4>
+                    <p>Reportes y estadísticas en tiempo real</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-headset"></i>
+                    <h4>Soporte 24/7</h4>
+                    <p>Atención personalizada cuando la necesites</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 {{.Title}} - Todos los derechos reservados</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+    </footer>
+
+    <script>
+       
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+    
+        window.addEventListener('load', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                loadingOverlay.style.visibility = 'hidden';
+            }, 500);
+        });
+
+        
+        document.querySelectorAll('.nav-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+     
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.bg-animation');
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+
+       
+        document.querySelectorAll('.nav-card a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                loadingOverlay.style.opacity = '1';
+                loadingOverlay.style.visibility = 'visible';
+                
+                setTimeout(() => {
+                    window.location.href = this.getAttribute('href');
+                }, 800);
+            });
+        });
+
+        
+        document.querySelectorAll('.auth-btn, .logout-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px) scale(1.05)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
